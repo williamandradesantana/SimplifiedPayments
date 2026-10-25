@@ -1,7 +1,14 @@
+using SimplifiedPayments.Configurations;
+using SimplifiedPayments.Infrastructure.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.AddSerilogLogging();
 
+builder.Services.AddEvolveConfiguration(builder.Configuration, builder.Environment);
+builder.Services.AddSqlServerConfiguration(builder.Configuration);
+builder.Services.AddCorsConfiguration(builder.Configuration);
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -10,6 +17,7 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
+app.UseCorsConfiguration();
 app.UseAuthorization();
 
 app.MapControllers();
