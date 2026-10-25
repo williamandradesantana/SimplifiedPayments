@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="SimplifiedPayments.Tests/SimplifiedPayments.Tests.csproj" Id="6e87b391-1b09-42dc-9f77-775a0d33926e" />
   <Project Path="SimplifiedPayments/SimplifiedPayments.csproj" />
 </Solution>
