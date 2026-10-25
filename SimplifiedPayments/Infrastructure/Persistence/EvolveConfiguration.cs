@@ -54,8 +54,14 @@ public static class EvolveConfiguration
         connection.Open();
 
         using var command = connection.CreateCommand();
-        command.CommandText = "IF DB_ID(@name) IS NULL EXEC('CREATE DATABASE ' + QUOTENAME(@name))";
-        command.Parameters.AddWithValue("@name", databaseName);
+        command.CommandText = """
+        IF DB_ID(@name) IS NULL
+        BEGIN
+            DECLARE @sql nvarchar(max) = N'CREATE DATABASE ' + QUOTENAME(@name);
+            EXEC (@sql);
+        END
+        """;
+        command.Parameters.Add("@name", System.Data.SqlDbType.NVarChar, 128).Value = databaseName;
         command.ExecuteNonQuery();
     }
 }
