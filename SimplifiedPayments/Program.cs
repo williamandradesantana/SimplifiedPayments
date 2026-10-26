@@ -1,3 +1,4 @@
+using SimplifiedPayments.Application;
 using SimplifiedPayments.Configurations;
 using SimplifiedPayments.Infrastructure.Persistence;
 
@@ -10,6 +11,7 @@ builder.Services.AddEvolveConfiguration(builder.Configuration, builder.Environme
 builder.Services.AddSqlServerConfiguration(builder.Configuration);
 builder.Services.AddCorsConfiguration(builder.Configuration);
 builder.Services.AddControllers();
+builder.Services.AddApplication();
 
 var app = builder.Build();
 
