@@ -1,5 +1,6 @@
 using SimplifiedPayments.Application;
 using SimplifiedPayments.Configurations;
+using SimplifiedPayments.Infrastructure;
 using SimplifiedPayments.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,9 +10,10 @@ builder.AddSerilogLogging();
 
 builder.Services.AddEvolveConfiguration(builder.Configuration, builder.Environment);
 builder.Services.AddSqlServerConfiguration(builder.Configuration);
+builder.Services.AddInfrastructure();
+builder.Services.AddApplication();
 builder.Services.AddCorsConfiguration(builder.Configuration);
 builder.Services.AddControllers();
-builder.Services.AddApplication();
 
 var app = builder.Build();
 

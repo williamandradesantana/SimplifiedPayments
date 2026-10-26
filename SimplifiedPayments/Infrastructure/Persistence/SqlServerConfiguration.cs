@@ -1,4 +1,6 @@
-﻿namespace SimplifiedPayments.Infrastructure.Persistence;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace SimplifiedPayments.Infrastructure.Persistence;
 
 public static class SqlServerConfiguration
 {
@@ -11,7 +13,7 @@ public static class SqlServerConfiguration
         if (string.IsNullOrEmpty(connectionString))
             throw new ArgumentNullException("Connection string for Sql Server is not configured!");
         
-        //services.AddDbContext<MSSQLContext>(options => options.UseSqlServer(connectionString));
+        services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
         return services;
     }
 }
