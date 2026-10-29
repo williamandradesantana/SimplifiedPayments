@@ -6,9 +6,24 @@ namespace SimplifiedPayments.Controllers;
 
 [ApiController]
 [Route("api/users/v1")]
-public sealed class UsersController(CreateUserHandler createUser) 
+public sealed class UsersController(
+    CreateUserHandler createUser, GetOneUserHandler getOneUser,
+    UpdateUserHandler updateUser, DeleteUserHandler deleteUser
+    ) 
     : ControllerBase
 {
+
+    [HttpGet("{id:int}")]
+    [ProducesResponseType<UserResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> GetOneUser(
+        int id, CancellationToken ct
+    )
+    {
+        GetOneUserResult result = await getOneUser.HandleAsync(id, ct);
+        return StatusCode(StatusCodes.Status200OK, UserResponse.From(result));
+    }
 
     [HttpPost]
     [ProducesResponseType<UserResponse>(StatusCodes.Status201Created)]
@@ -25,5 +40,25 @@ public sealed class UsersController(CreateUserHandler createUser)
         CreateUserResult result = await createUser.HandleAsync(command, ct);
 
         return StatusCode(StatusCodes.Status201Created, UserResponse.From(result));
+    }
+
+    [HttpPut("{id:int}")]
+    [ProducesResponseType<UserResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> UpdateUser(int id, UpdateUserRequest request, CancellationToken ct)
+    {
+        UpdateUserCommand command = new UpdateUserCommand(request.FullName, request.Email);
+        GetOneUserResult result = await updateUser.HandleAsync(id, command, ct);
+        return StatusCode(StatusCodes.Status200OK, UserResponse.From(result));
+    }
+
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteUser(int id, CancellationToken ct)
+    {
+        await deleteUser.HandleAsync(id, ct);
+        return StatusCode(StatusCodes.Status204NoContent);
     }
 }

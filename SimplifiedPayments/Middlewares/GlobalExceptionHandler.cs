@@ -17,6 +17,7 @@ public sealed class GlobalExceptionHandler(
             ConflictException => (StatusCodes.Status409Conflict, "Conflict"),
             InvalidRequestException => (StatusCodes.Status422UnprocessableEntity, "Invalid request"),
             DomainException => (StatusCodes.Status422UnprocessableEntity, "Business rule violation"),
+            ResourceNotFoundException => (StatusCodes.Status404NotFound, "Entity not found"),
             _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred")
         };
         
