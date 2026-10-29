@@ -22,8 +22,7 @@ public class User
         string fullName, string document, string email, string passwordHash, UserType type
     )
     {
-        if (string.IsNullOrWhiteSpace(fullName) || fullName.Trim().Length > 150)
-            throw new DomainException("Full name is required and must have at most 150 characters.");
+        ValidateFullName(fullName);
         if (string.IsNullOrWhiteSpace(passwordHash))
             throw new DomainException("Password Hash is required.");
 
@@ -42,11 +41,24 @@ public class User
         };
     }
 
+    public void UpdateProfile(string fullName, string email)
+    {
+        FullName = ValidateFullName(fullName);
+        Email = NormalizeEmail(email);
+    }
+
     public bool CanSendMoney => Type == UserType.Common;
 
     public void EnsureCanSendMoney()
     {
         if (!CanSendMoney) throw new ShopkeeperCannotTransferException();
+    }
+
+    private static string ValidateFullName(string fullName)
+    {
+        if (string.IsNullOrWhiteSpace(fullName) || fullName.Trim().Length > 150)
+            throw new DomainException("Full name is required and must have at most 150 characters.");
+        return fullName.Trim();
     }
 
     private static string NormalizeEmail(string? email)

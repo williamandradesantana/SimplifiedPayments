@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimplifiedPayments.Application.Abstractions;
 using SimplifiedPayments.Domain.Entities;
-using System.Reflection.Metadata;
 
 namespace SimplifiedPayments.Infrastructure.Persistence.Repositories;
 
@@ -19,4 +18,7 @@ public class UserRepository(AppDbContext db) : IUserRepository
 
     public Task<bool> ExistsByEmailAsync(string email, CancellationToken ct = default)
         => db.Users.AnyAsync(user => user.Email == email, ct);
+
+    public void Remove(User user)
+        => db.Users.Remove(user);
 }

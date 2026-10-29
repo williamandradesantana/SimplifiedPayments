@@ -1,13 +1,12 @@
 ﻿using SimplifiedPayments.Application.Abstractions;
 using SimplifiedPayments.Domain.Entities;
-using System.Reflection.Metadata;
 
 namespace SimplifiedPayments.Tests.Fakes;
 
 internal class FakeUserRepository : IUserRepository
 {
     public List<User> Users { get; } = [];
-   
+
     public Task<User?> GetByIdAsync(int id, CancellationToken ct = default)
         => Task.FromResult(Users.FirstOrDefault(user => user.Id == id));
 
@@ -23,6 +22,8 @@ internal class FakeUserRepository : IUserRepository
     public Task<bool> ExistsByEmailAsync(string email, CancellationToken ct = default)
         => Task.FromResult(Users.Any(user => user.Email == email));
 
+    public void Remove(User user)
+        => Users.Remove(user);
 }
 
 internal sealed class FakeUnitOfWork : IUnitOfWork

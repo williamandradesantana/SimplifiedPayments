@@ -8,4 +8,5 @@ public interface IUserRepository
     Task<bool> ExistsByDocumentAsync(string document, CancellationToken ct = default);
     Task<bool> ExistsByEmailAsync(string email, CancellationToken ct = default);
     Task AddAsync(User user, CancellationToken ct = default);
+    void Remove(User user); 
 }
