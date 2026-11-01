@@ -13,4 +13,10 @@ internal static class UserFactory
 
     public static User Shopkeeper(string email = "loja@example.com")
         => User.Create("Padaria Pão Quente", ValidCnpj, email, "hash", UserType.Shopkeeper);
+
+    public static User WithId(this User user, int id)
+    {
+        typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, id);
+        return user;
+    }
 }

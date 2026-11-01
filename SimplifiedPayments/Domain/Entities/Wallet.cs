@@ -33,4 +33,6 @@ public class Wallet
         if (decimal.Round(amount, 2) != amount) 
             throw new DomainException("Amount must have at most 2 decimal places.");
     }
+
+    public bool HasSufficientBalance(decimal amount) => Balance >= amount;
 }
