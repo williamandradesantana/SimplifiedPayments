@@ -9,7 +9,8 @@ public sealed class UnitOfWork(AppDbContext db) : IUnitOfWork
 {
     private const int UniqueIndexViolation = 2601;
     private const int UniqueConstraintViolation = 2627;
-    
+    private const int ConstraintViolation = 547;
+
     public async Task<int> SaveChangesAsync(CancellationToken ct = default)
     {
         try
@@ -20,6 +21,10 @@ public sealed class UnitOfWork(AppDbContext db) : IUnitOfWork
             { Number: UniqueIndexViolation or UniqueConstraintViolation })
         {
             throw new ConflictException("A record with the same unique value already exists.");
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is SqlException { Number: ConstraintViolation })
+        {
+            throw new ConflictException("The record is referenced by other records and cannot be removed.");
         }
     }
 }

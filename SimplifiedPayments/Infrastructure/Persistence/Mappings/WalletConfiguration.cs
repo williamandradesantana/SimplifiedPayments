@@ -15,5 +15,7 @@ public sealed class WalletConfiguration : IEntityTypeConfiguration<Wallet>
         builder.Property(wallet => wallet.UserId).HasColumnName("user_id").IsRequired();
         builder.Property(wallet => wallet.Balance)
             .HasColumnName("balance").HasPrecision(18, 2).IsRequired();
+        builder.Property<byte[]>("RowVersion").HasColumnName("row_version")
+            .IsRowVersion();
     }
 }
