@@ -17,6 +17,10 @@ public sealed class UnitOfWork(AppDbContext db) : IUnitOfWork
         {
             return await db.SaveChangesAsync(ct);
         }
+        catch (DbUpdateConcurrencyException)
+        {
+            throw new ConflictException("The data was changed by another operation. Please try again.");
+        }
         catch (DbUpdateException ex) when (ex.InnerException is SqlException
             { Number: UniqueIndexViolation or UniqueConstraintViolation })
         {
