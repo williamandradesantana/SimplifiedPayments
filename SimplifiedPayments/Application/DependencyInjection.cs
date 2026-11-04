@@ -1,4 +1,5 @@
-﻿using SimplifiedPayments.Application.UseCases.Users;
+﻿using SimplifiedPayments.Application.UseCases.Transfers;
+using SimplifiedPayments.Application.UseCases.Users;
 
 namespace SimplifiedPayments.Application;
 
@@ -12,6 +13,7 @@ public static class DependencyInjection
         services.AddScoped<GetOneUserHandler>();
         services.AddScoped<DeleteUserHandler>();
         services.AddScoped<UpdateUserHandler>();
+        services.AddScoped<TransferHandler>();
         return services;
     }
 }
