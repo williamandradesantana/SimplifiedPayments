@@ -1,6 +1,114 @@
-@SimplifiedPayments_HostAddress = http://localhost:5104
+@host = http://localhost:5097
 
-GET {{SimplifiedPayments_HostAddress}}/weatherforecast/
-Accept: application/json
+### Usuários
 
-###
+### Criar usuário comum (201)
+POST {{host}}/api/users/v1
+Content-Type: application/json
+
+{
+  "fullName": "Carlos Almeida",
+  "document": "529.982.247-25",
+  "email": "carlos@example.com",
+  "password": "Senha@123",
+  "type": "Common"
+}
+
+### Criar lojista (201)
+POST {{host}}/api/users/v1
+Content-Type: application/json
+
+{
+  "fullName": "Loja do Zé",
+  "document": "11.222.333/0001-81",
+  "email": "loja@example.com",
+  "password": "Senha@123",
+  "type": "Shopkeeper"
+}
+
+### Repetir uma das duas chamadas acima: e-mail/documento já cadastrado (409)
+
+### CPF inválido (422)
+POST {{host}}/api/users/v1
+Content-Type: application/json
+
+{
+  "fullName": "Fulano",
+  "document": "111.111.111-11",
+  "email": "fulano@example.com",
+  "password": "Senha@123",
+  "type": "Common"
+}
+
+### Campo obrigatório ausente (400)
+POST {{host}}/api/users/v1
+Content-Type: application/json
+
+{
+  "fullName": "Fulano",
+  "email": "fulano2@example.com",
+  "password": "Senha@123",
+  "type": "Common"
+}
+
+### Consultar usuário (200). O id 1 é a Maria, do seed
+GET {{host}}/api/users/v1/1
+
+### Consultar usuário inexistente (404)
+GET {{host}}/api/users/v1/999999
+
+### Atualizar nome e e-mail (200)
+PUT {{host}}/api/users/v1/1
+Content-Type: application/json
+
+{
+  "fullName": "Maria Souza Lima",
+  "email": "maria@example.com"
+}
+
+### Remover usuário (204). Use o id de um usuário criado por você, sem transferências
+DELETE {{host}}/api/users/v1/6
+
+### Transferências
+
+### Comum para lojista (201)
+POST {{host}}/api/transfers/v1
+Content-Type: application/json
+
+{ "value": 100.0, "payer": 1, "payee": 4 }
+
+### Comum para comum (201)
+POST {{host}}/api/transfers/v1
+Content-Type: application/json
+
+{ "value": 50.25, "payer": 2, "payee": 3 }
+
+### Lojista como pagador (422)
+POST {{host}}/api/transfers/v1
+Content-Type: application/json
+
+{ "value": 10.0, "payer": 4, "payee": 1 }
+
+### Saldo insuficiente (422)
+POST {{host}}/api/transfers/v1
+Content-Type: application/json
+
+{ "value": 999999.0, "payer": 1, "payee": 2 }
+
+### Transferência para si mesmo (422)
+POST {{host}}/api/transfers/v1
+Content-Type: application/json
+
+{ "value": 10.0, "payer": 1, "payee": 1 }
+
+### Pagador inexistente (404)
+POST {{host}}/api/transfers/v1
+Content-Type: application/json
+
+{ "value": 10.0, "payer": 999999, "payee": 1 }
+
+### Valor ausente (400)
+POST {{host}}/api/transfers/v1
+Content-Type: application/json
+
+{ "payer": 1, "payee": 2 }
