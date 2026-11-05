@@ -34,10 +34,12 @@ public static class CorsConfiguration
 
         app.Use(async (context, next) =>
         {
-            var origin = context.Request.Headers["Origin"].ToString();
-            if (
-                !string.IsNullOrEmpty(origin) && !origins.Contains(origin, StringComparer.OrdinalIgnoreCase)
-               )
+            var origin = context.Request.Headers.Origin.ToString();
+            var sameOrigin = $"{context.Request.Scheme}://{context.Request.Host}";
+
+            if (!string.IsNullOrEmpty(origin)
+                && !origin.Equals(sameOrigin, StringComparison.OrdinalIgnoreCase)
+                && !origins.Contains(origin, StringComparer.OrdinalIgnoreCase))
             {
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
                 await context.Response.WriteAsync("CORS origin not allowed.");

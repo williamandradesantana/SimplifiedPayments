@@ -15,6 +15,8 @@ builder.Services.AddSqlServerConfiguration(builder.Configuration);
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
 builder.Services.AddCorsConfiguration(builder.Configuration);
+builder.Services.AddRouteConfiguration();
+builder.Services.AddOpenAPIConfiguration();
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -33,6 +35,9 @@ app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseCorsConfiguration(builder.Configuration);
 app.UseAuthorization();
+
+app.UseSwagger();
+app.UseScalarConfiguration();
 app.MapControllers();
 
 app.Run();
