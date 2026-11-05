@@ -28,7 +28,7 @@ public class CpfTests
     [InlineData("52998224726")]
     [InlineData("5299822472500")]
     [InlineData("abcdefghijk")]
-    public void Create_InvalidCpf_Throws(string input)
+    public void Create_InvalidCpf_Throws(string? input)
     {
         Action act = () => Cpf.Create(input);
         act.Should().Throw<InvalidDocumentException>().WithMessage("Invalid CPF.");
