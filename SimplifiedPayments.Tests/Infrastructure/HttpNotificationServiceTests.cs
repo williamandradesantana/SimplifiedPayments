@@ -4,6 +4,8 @@ using SimplifiedPayments.Infrastructure.ExternalServices;
 using SimplifiedPayments.Tests.Fakes;
 using System.Net;
 
+namespace SimplifiedPayments.Tests.Infrastructure;
+
 public class HttpNotificationServiceTests
 {
     private const string Url = "https://notify.test/api/v1/notify";
