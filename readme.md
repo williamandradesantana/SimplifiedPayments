@@ -15,6 +15,7 @@ API de pagamentos simplificada, desenvolvida como solução do [desafio técnico
 - [Testes](#testes)
 - [Integração contínua](#integração-contínua)
 - [Limitações e próximos passos](#limitações-e-próximos-passos)
+- [Licença](#licença)
 
 ## Regras de negócio
 
@@ -38,6 +39,7 @@ API de pagamentos simplificada, desenvolvida como solução do [desafio técnico
 | Resiliência HTTP | `Microsoft.Extensions.Http.Resilience` (timeout e retry) |
 | Senhas | BCrypt.Net-Next |
 | Logs | Serilog |
+| Documentação da API | Swashbuckle (geração do OpenAPI) e [Scalar](https://scalar.com/) (interface interativa) |
 | Testes | xUnit, FluentAssertions, Testcontainers |
 | Infra local e CI | Docker Compose, GitHub Actions |
 
@@ -56,7 +58,7 @@ SimplifiedPayments.slnx
 │   ├── Security/                       # Implementação do hash de senhas (BCrypt)
 │   ├── Controllers/                    # Endpoints e contratos HTTP
 │   ├── Middlewares/                    # Tratamento global de exceções (ProblemDetails)
-│   ├── Configurations/                 # CORS e logging
+│   ├── Configurations/                 # CORS, logging, OpenAPI e Scalar
 │   ├── docker-compose.yaml             # SQL Server para desenvolvimento
 │   └── .env.example
 └── SimplifiedPayments.Tests/           # Testes unitários e de integração
@@ -118,7 +120,7 @@ dotnet user-secrets set "ConnectionStrings:SqlServer" "Data Source=localhost,143
 dotnet run --launch-profile http
 ```
 
-A API sobe em `http://localhost:5097`. Em `Development`, na inicialização ela **cria o banco** `simplified_payments` (se não existir) e **aplica as migrations** e o seed.
+A API sobe em `http://localhost:5097`, e a documentação interativa fica em `http://localhost:5097/scalar`. Em `Development`, na inicialização ela **cria o banco** `simplified_payments` (se não existir) e **aplica as migrations** e o seed.
 
 Para recomeçar do zero, apague o volume do banco: `docker compose down -v`.
 
@@ -154,7 +156,7 @@ ExternalServices__AuthorizerUrl="https://..."
 Observações:
 
 - As migrations rodam **apenas em `Development`**. Em outros ambientes, o schema deve ser aplicado por um processo de deploy.
-- Além do CORS padrão, a API **responde `403` a qualquer requisição que envie um header `Origin` fora da lista**. Clientes que não enviam `Origin` (curl, Postman, outros serviços) não são afetados, então isso não substitui autenticação.
+- Além do CORS padrão, a API **responde `403` a qualquer requisição que envie um header `Origin` fora da lista e diferente da própria origem da API** (por isso o Scalar, servido pela própria API, continua funcionando). Clientes que não enviam `Origin` (curl, Postman, outros serviços) não são afetados, então isso não substitui autenticação.
 
 ## API
 
@@ -169,6 +171,13 @@ Todos os endpoints usam JSON. Os erros seguem o formato `ProblemDetails` (RFC 94
 | `POST` | `/api/transfers/v1` | Realiza uma transferência | `201` |
 
 O arquivo [`SimplifiedPayments.http`](SimplifiedPayments/SimplifiedPayments.http) traz uma requisição pronta para cada caso.
+
+### Documentação interativa
+
+Com a API rodando em `Development`, a documentação pode ser explorada e testada pelo navegador:
+
+- **Scalar:** `http://localhost:5097/scalar`
+- **Documento OpenAPI (JSON):** `http://localhost:5097/swagger/v1/swagger.json`
 
 ### Criar usuário
 
@@ -256,7 +265,8 @@ dotnet test --filter "Category=Integration"     # apenas integração
 - os endpoints de usuário, com os status HTTP esperados e a persistência no banco;
 - o comportamento do CORS;
 - o mapeamento do EF Core, o seed e as constraints do banco;
-- a concorrência (várias requisições simultâneas com o mesmo e-mail resultam em exatamente um cadastro).
+- a concorrência (várias requisições simultâneas com o mesmo e-mail resultam em exatamente um cadastro);
+- a geração do documento OpenAPI (`/swagger/v1/swagger.json`).
 
 Os testes de integração não chamam os serviços externos reais, então não dependem de internet.
 
@@ -280,3 +290,7 @@ Execuções antigas da mesma branch são canceladas automaticamente quando chega
 - **Não há consulta de extrato** nem listagem de transferências.
 - **Projeto único.** Separar `Domain`, `Application`, `Infrastructure` e `Api` em projetos faria o compilador impor a regra de dependência.
 - **Sem Dockerfile da API.** O `docker-compose.yaml` sobe apenas o banco.
+
+## Licença
+
+Distribuído sob a licença MIT. Veja o arquivo [`LICENSE`](LICENSE).
