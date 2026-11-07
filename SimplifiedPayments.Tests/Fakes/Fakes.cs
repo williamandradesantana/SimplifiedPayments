@@ -24,23 +24,26 @@ internal class FakeUserRepository : IUserRepository
 
     public void Remove(User user)
         => Users.Remove(user);
-}
 
-internal sealed class FakeUnitOfWork : IUnitOfWork
-{
-    public int SaveCount { get; private set; }
-    public Task<int> SaveChangesAsync(CancellationToken ct = default)
+    public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default)
+        => Task.FromResult(Users.FirstOrDefault(user => user.Email == email));
+
+    internal sealed class FakeUnitOfWork : IUnitOfWork
     {
-        SaveCount++;
-        return Task.FromResult(1);
+        public int SaveCount { get; private set; }
+        public Task<int> SaveChangesAsync(CancellationToken ct = default)
+        {
+            SaveCount++;
+            return Task.FromResult(1);
+        }
     }
-}
 
-internal sealed class FakePasswordHasher : IPasswordHasher
-{
-    public string Hash(string password)
-        => $"hashed:{password}";
+    internal sealed class FakePasswordHasher : IPasswordHasher
+    {
+        public string Hash(string password)
+            => $"hashed:{password}";
 
-    public bool Verify(string password, string hash)
-        => hash == Hash(password);
+        public bool Verify(string password, string hash)
+            => hash == Hash(password);
+    }
 }

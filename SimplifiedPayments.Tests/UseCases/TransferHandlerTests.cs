@@ -6,6 +6,7 @@ using SimplifiedPayments.Domain.Entities;
 using SimplifiedPayments.Domain.Exceptions;
 using SimplifiedPayments.Tests.Fakes;
 using SimplifiedPayments.Tests.Helpers;
+using static SimplifiedPayments.Tests.Fakes.FakeUserRepository;
 
 namespace SimplifiedPayments.Tests.UseCases;
 

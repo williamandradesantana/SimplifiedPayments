@@ -10,7 +10,7 @@ public sealed class ApiFixture : IAsyncLifetime
     public const string AllowedOrigin = "http://localhost:3000";
 
     private static readonly string[] EnvironmentKeys =
-        ["ConnectionStrings__SqlServer", "Cors__AllowedOrigins__0"];
+        ["ConnectionDatabase", "AllowedOrigins", "JWT_SIGNINGKEY"];
 
     private readonly MsSqlContainer _sql =
         new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-latest").Build();
@@ -29,8 +29,9 @@ public sealed class ApiFixture : IAsyncLifetime
             InitialCatalog = "simplified_payments_tests"
         }.ConnectionString;
 
-        Environment.SetEnvironmentVariable("ConnectionStrings__SqlServer", connectionString);
-        Environment.SetEnvironmentVariable("Cors__AllowedOrigins__0", AllowedOrigin);
+        Environment.SetEnvironmentVariable("ConnectionDatabase", connectionString);
+        Environment.SetEnvironmentVariable("AllowedOrigins", AllowedOrigin);
+        Environment.SetEnvironmentVariable("JWT_SIGNINGKEY", "test-only-signing-key-with-at-least-32-chars!");
 
         _factory = new WebApplicationFactory<Program>()
             .WithWebHostBuilder(builder => builder.UseEnvironment("Development"));
