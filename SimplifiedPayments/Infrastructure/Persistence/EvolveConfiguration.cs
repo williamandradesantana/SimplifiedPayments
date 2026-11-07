@@ -15,9 +15,9 @@ public static class EvolveConfiguration
         if (!environment.IsDevelopment())
             return services;
 
-        var connectionString = configuration.GetConnectionString("SqlServer");
+        var connectionString = configuration["ConnectionDatabase"];
         if (string.IsNullOrWhiteSpace(connectionString))
-            throw new InvalidOperationException("Connection string 'SqlServer' is not configured.");
+            throw new InvalidOperationException("Connection string 'ConnectionDatabase' is not configured.");
 
         try
         {

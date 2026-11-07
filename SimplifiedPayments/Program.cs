@@ -1,9 +1,12 @@
+using dotenv.net;
 using SimplifiedPayments.Application;
 using SimplifiedPayments.Configurations;
 using SimplifiedPayments.Infrastructure;
 using SimplifiedPayments.Infrastructure.Persistence;
 using SimplifiedPayments.Middlewares;
 using System.Text.Json.Serialization;
+
+DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 

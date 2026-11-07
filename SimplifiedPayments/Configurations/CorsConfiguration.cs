@@ -6,8 +6,17 @@ public static class CorsConfiguration
 {
     private static string PolicyName = "DefaultCors";
 
-    private static string[] GetAllowedOrigins(IConfiguration configuration)    
-        => configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+    private static string[] GetAllowedOrigins(IConfiguration configuration)
+    {
+        var origins = configuration["AllowedOrigins"];
+
+        if (string.IsNullOrWhiteSpace(origins)) return [];
+        
+        return origins.Split(',', 
+            StringSplitOptions.RemoveEmptyEntries | 
+            StringSplitOptions.TrimEntries
+        );
+    }
        
     public static IServiceCollection AddCorsConfiguration(
         this IServiceCollection services, IConfiguration configuration

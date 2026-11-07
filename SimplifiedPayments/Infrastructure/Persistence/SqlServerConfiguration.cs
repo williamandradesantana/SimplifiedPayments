@@ -9,9 +9,9 @@ public static class SqlServerConfiguration
         this IServiceCollection services, IConfiguration configuration
     )
     {
-        var connectionString = configuration["ConnectionStrings:SqlServer"];
+        var connectionString = configuration["ConnectionDatabase"];
         if (string.IsNullOrEmpty(connectionString))
-            throw new ArgumentNullException("Connection string for Sql Server is not configured!");
+            throw new ArgumentNullException("Connection string for Sql database is not configured!");
         
         services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
         return services;
